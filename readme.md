@@ -35,7 +35,7 @@
 #### 配置说明
 
 在`setting.fcg`配置文件中设置以下参数：
-``` 
+```py3
 [DEFAULT]
 - url = #登录URL（如果是网页认证）
 - check_button = #按钮的元素ID
