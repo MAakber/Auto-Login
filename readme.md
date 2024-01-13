@@ -28,9 +28,15 @@
 #### 安装步骤
 
 1. 克隆或下载本项目至本地。
+    ```bash
+    git clone https://github.com/MAakber/Auto-Login
+    ```
 2. 打开终端或命令提示符，进入项目目录。
 3. 创建并激活Python虚拟环境（可选，看你的）。
-4. 运行`pip install -r requirements.txt`安装依赖。
+4. 安装依赖。
+   ```bash
+   pip install -r requirements.txt
+   ```
 
 #### 配置说明
 
