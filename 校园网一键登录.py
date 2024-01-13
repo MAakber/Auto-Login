@@ -54,14 +54,14 @@ def get_exe_version(file_path):  # 获取exe文件的版本号
         return None  
     
 if not os.path.exists(config_file_path):  #检测环节 
-    with open(config_file_path, 'w',encoding='utf-8') as configfile:  
+    with open(config_file_path, 'w') as configfile:  
         configfile.write('[DEFAULT]\n')  
         configfile.write('url = \n')  
         configfile.write('check_button = \n') 
         configfile.write('ver = \n')  
 check_and_download_file("msedgedriver.exe")
 
-with open(config_file_path, 'r', encoding='utf-8') as configfile:   # 读取文件内容到配置解析器  
+with open(config_file_path, 'r') as configfile:   # 读取文件内容到配置解析器  
     config.read_file(configfile)   
 config.read(config_file_path)  
 try:  
