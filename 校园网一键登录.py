@@ -2,8 +2,9 @@ from selenium import webdriver
 from selenium.webdriver.edge.service import Service
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.by import By
-import subprocess
+from selenium.webdriver.common.by import By 
+from webdriver_manager.microsoft import EdgeChromiumDriverManager
+import shutil 
 import configparser
 import ctypes
 import win32api
@@ -14,13 +15,30 @@ config_file_path = 'setting.cfg'
 exe_file_path = 'msedgedriver.exe'  
 config = configparser.ConfigParser(interpolation=None)
 
+def Downloads():
+    config = configparser.ConfigParser()  
+    config.read('setting.cfg')
+    script_dir = os.path.dirname(os.path.realpath(__file__))
+    driver_path = EdgeChromiumDriverManager().install()
+    driver = webdriver.Edge(service=Service(driver_path))
+    print(driver.capabilities['browserVersion'])# 打印浏览器版本
+    browser_version = str(driver.capabilities.get('browserVersion')) 
+    config['DEFAULT']['ver'] = browser_version     
+    with open('setting.cfg', 'w') as configfile:  
+        config.write(configfile)  
+    driver.quit()
+    new_driver_path = os.path.join(script_dir, os.path.basename(driver_path))
+    if os.path.exists(new_driver_path):
+        os.remove(new_driver_path)
+    shutil.move(driver_path, new_driver_path)
+
 def check_and_download_file(filename):   # 检查文件是否存在  
     if os.path.isfile(filename):   
         print(f"{filename} OK") 
     else:   
         result = ctypes.windll.user32.MessageBoxW(0, f"驱动文件 {filename} 不存在，是否安装?\n(选择自动安装需要一定时间)", u"驱动文件丢失",  0x40 | 0x1)  
         if result == 1:  
-            subprocess.run(["python", "自动下载Edge浏览器驱动.py", filename])
+            Downloads()
             result = ctypes.windll.user32.MessageBoxW(0, f"安装成功", u"完成",  0x40 | 0x0)
         else:
             sys.exit()
@@ -75,7 +93,7 @@ if expected_version and exe_version:
         print("Versions OK")  
     else:  
         print(f"Versions do not match. Expected: {expected_version}, Found: {exe_version}")  
-        subprocess.run(["python", "自动下载Edge浏览器驱动.py"])
+        Downloads()
 else:  
     ctypes.windll.user32.MessageBoxW(0, u"出现未知错误，请尝试重装该程序", u"错误",  0x10 | 0x0)
     sys.exit()
