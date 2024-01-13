@@ -16,21 +16,20 @@ exe_file_path = 'msedgedriver.exe'
 config = configparser.ConfigParser(interpolation=None)
 
 def Downloads():
-    config = configparser.ConfigParser()  
-    config.read('setting.cfg')
-    script_dir = os.path.dirname(os.path.realpath(__file__))
-    driver_path = EdgeChromiumDriverManager().install()
-    driver = webdriver.Edge(service=Service(driver_path))
-    print(driver.capabilities['browserVersion'])# 打印浏览器版本
-    browser_version = str(driver.capabilities.get('browserVersion')) 
-    config['DEFAULT']['ver'] = browser_version     
+    config.read('setting.cfg') 
+    current_dir = os.getcwd()  
+    driver_path = EdgeChromiumDriverManager().install()   
+    if not os.path.exists(os.path.join(current_dir, 'msedgedriver.exe')):   
+        driver_filename = os.path.basename(driver_path)   
+        shutil.move(driver_path, os.path.join(current_dir, driver_filename))  
+    service = Service(executable_path=os.path.join(current_dir, 'msedgedriver.exe'))  
+    driver = webdriver.Edge(service=service)
+    print(driver.capabilities['browserVersion'])  # 打印浏览器版本  
+    browser_version = str(driver.capabilities.get('browserVersion'))  
+    config['DEFAULT']['ver'] = browser_version  
     with open('setting.cfg', 'w') as configfile:  
         config.write(configfile)  
-    driver.quit()
-    new_driver_path = os.path.join(script_dir, os.path.basename(driver_path))
-    if os.path.exists(new_driver_path):
-        os.remove(new_driver_path)
-    shutil.move(driver_path, new_driver_path)
+    driver.quit()  
 
 def check_and_download_file(filename):   # 检查文件是否存在  
     if os.path.isfile(filename):   
