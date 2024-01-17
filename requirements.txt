@@ -1,3 +1,4 @@
 pywin32==306
 selenium==4.16.0
 webdriver_manager==4.0.1
+win10toast==0.9

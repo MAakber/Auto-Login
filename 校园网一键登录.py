@@ -1,4 +1,5 @@
 from selenium import webdriver
+from win10toast import ToastNotifier
 from selenium.webdriver.edge.service import Service
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -115,5 +116,7 @@ try:
 except Exception as e:  
     print(f"An error occurred: {e}")  
 finally:  
+    toaster = ToastNotifier()
+    toaster.show_toast("MISSION COMPELETE","任务已执行完毕！",icon_path=None,duration=10)
     driver.quit()
     sys.exit()
